@@ -9,6 +9,7 @@
 UBTTask_Patrol::UBTTask_Patrol()
 {
 	NodeName = "Patrol";
+	bNotifyTick = true;
 }
 
 EBTNodeResult::Type UBTTask_Patrol::ExecuteTask(UBehaviorTreeComponent& OwnerComponent, uint8* NodeMemory)
@@ -57,7 +58,7 @@ void UBTTask_Patrol::TickTask(UBehaviorTreeComponent& OwnerComponent, uint8* Nod
 
 	FVector PatrolLocation = BBC->GetValueAsVector("TargetPatrolLocation");
 
-	if (HasReachedTarget(ControlledPawn, PatrolLocation, 100))
+	if (HasReachedTarget(ControlledPawn, PatrolLocation, 200))
 	{
 		FinishLatentTask(OwnerComponent, EBTNodeResult::Succeeded);
 	}
