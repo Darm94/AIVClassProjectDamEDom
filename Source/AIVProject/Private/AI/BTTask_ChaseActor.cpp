@@ -9,6 +9,7 @@
 UBTTask_ChaseActor::UBTTask_ChaseActor()
 {
 	NodeName = "Chase Actor";
+	bNotifyTick = true;
 }
 
 EBTNodeResult::Type UBTTask_ChaseActor::ExecuteTask(UBehaviorTreeComponent& OwnerComponent, uint8* NodeMemory)
@@ -26,14 +27,24 @@ EBTNodeResult::Type UBTTask_ChaseActor::ExecuteTask(UBehaviorTreeComponent& Owne
 
 void UBTTask_ChaseActor::TickTask(UBehaviorTreeComponent& OwnerComponent, uint8* NodeMemory, float DeltaTime)
 {
-	APawn* ControlledPawn = OwnerComponent.GetAIOwner()->GetPawn();
-	UBlackboardComponent* BBC = OwnerComponent.GetAIOwner()->GetBlackboardComponent();
+	AAIController* EnemyController = OwnerComponent.GetAIOwner();
+	UBlackboardComponent* BBC = EnemyController->GetBlackboardComponent();
 	AActor* TargetActor = Cast<AActor>(BBC->GetValueAsObject(FName("TargetChaseActor")));
+	APawn* ControlledPawn = EnemyController->GetPawn();
+
+	if (TargetActor)
+	{
+		// AGGIORNA SEMPRE LA ROTTA
+		EnemyController->MoveToActor(TargetActor);
+		UE_LOG(LogTemp, Warning, TEXT("Move to actor %s at Location: %s"), *TargetActor->GetName(), *TargetActor->GetActorLocation().ToString());
+	}
+
 	if (CanAttack(ControlledPawn, TargetActor))
 	{
 		BBC->SetValueAsBool(FName("bCanAttack"), true);
 		FinishLatentTask(OwnerComponent, EBTNodeResult::Succeeded);
 	}
+
 	if (ShouldFallback(ControlledPawn, TargetActor))
 	{
 		BBC->SetValueAsObject(FName("TargetChaseActor"), nullptr);

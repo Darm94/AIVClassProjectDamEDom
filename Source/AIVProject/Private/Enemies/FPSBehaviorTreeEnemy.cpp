@@ -29,3 +29,16 @@ void AFPSBehaviorTreeEnemy::ReactToSeenActor(AActor* InActor, FVector Location)
 		}
 	}
 }
+
+void AFPSBehaviorTreeEnemy::ReactToHeardActor(AActor* InActor, FVector Location)
+{
+	if(InActor)
+	{
+		AFPSCharacter* Player = Cast<AFPSCharacter>(InActor);
+		AFPSComplexAIController* EnemyController = Cast<AFPSComplexAIController>(GetController());
+		if (Player && EnemyController)
+		{
+			EnemyController->BBC->SetValueAsObject(FName("TargetChaseActor"),InActor);
+		}
+	}
+}

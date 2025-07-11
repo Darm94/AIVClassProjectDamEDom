@@ -102,7 +102,7 @@ void AGenericEnemy::OnPerceptionUpdated(const TArray<AActor*>& UpdatedActors)
 			{
 				if (Stimulus.Type == UAISense::GetSenseID<UAISense_Sight>() && Stimulus.WasSuccessfullySensed())
 				{
-					UE_LOG(LogTemp, Warning, TEXT("Saw actor %s at Location: %s"), *Actor->GetName(), *Stimulus.StimulusLocation.ToString());
+					//UE_LOG(LogTemp, Warning, TEXT("Saw actor %s at Location: %s"), *Actor->GetName(), *Stimulus.StimulusLocation.ToString());
 					ReactToSeenActor(Actor, Stimulus.StimulusLocation);
 				}
 				else if (Stimulus.Type == UAISense::GetSenseID<UAISense_Hearing>() && Stimulus.WasSuccessfullySensed())

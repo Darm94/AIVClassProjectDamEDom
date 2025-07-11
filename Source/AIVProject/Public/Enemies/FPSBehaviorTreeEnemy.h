@@ -35,6 +35,6 @@ public:
 
 	virtual void ReactToSeenActor(AActor* InActor, FVector Location) override;
 
-	virtual void ReactToHeardActor(AActor* InActor, FVector Location) override {};
+	virtual void ReactToHeardActor(AActor* InActor, FVector Location) override;
 	
 };
