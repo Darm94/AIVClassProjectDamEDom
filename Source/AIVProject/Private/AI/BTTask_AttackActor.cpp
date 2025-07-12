@@ -30,7 +30,7 @@ void UBTTask_AttackActor::TickTask(UBehaviorTreeComponent& OwnerComponent, uint8
     }
 
     // Chosen Damage
-    float DamageAmount = 20.0f;
+    float DamageAmount = 10.0f;
 
     // 1) Call Interface
     IFPSInteractable* Interactable = Cast<IFPSInteractable>(TargetActor);
@@ -47,8 +47,6 @@ void UBTTask_AttackActor::TickTask(UBehaviorTreeComponent& OwnerComponent, uint8
             OwnerComponent.GetAIOwner()->GetPawn(), // DamageCauser
             UDamageType::StaticClass()
         );
-
-        
     }
     // 3) Finish the task, the attack condition have to be checked again
     FinishLatentTask(OwnerComponent, EBTNodeResult::Succeeded);
