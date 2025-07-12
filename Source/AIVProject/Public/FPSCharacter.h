@@ -3,13 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "FPSInteractable.h"
 #include "GameFramework/Character.h"
 #include "GenericTeamAgentInterface.h"
 #include "Components/SceneCaptureComponent2D.h"
 #include "FPSCharacter.generated.h"
 
 UCLASS()
-class AIVPROJECT_API AFPSCharacter : public ACharacter, public IGenericTeamAgentInterface
+class AIVPROJECT_API AFPSCharacter : public ACharacter, public IGenericTeamAgentInterface//, public IFPSInteractable
 {
 	GENERATED_BODY()
 
@@ -105,6 +106,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void TakeDamage(int32 IncomingDamage);
 
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Minimap")
 	USceneCaptureComponent2D* MinimapCaptureComponent;
 

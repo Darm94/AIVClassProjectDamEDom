@@ -36,7 +36,7 @@ void UBTTask_ChaseActor::TickTask(UBehaviorTreeComponent& OwnerComponent, uint8*
 	{
 		// AGGIORNA SEMPRE LA ROTTA
 		EnemyController->MoveToActor(TargetActor);
-		UE_LOG(LogTemp, Warning, TEXT("Move to actor %s at Location: %s"), *TargetActor->GetName(), *TargetActor->GetActorLocation().ToString());
+		//UE_LOG(LogTemp, Warning, TEXT("Move to actor %s at Location: %s"), *TargetActor->GetName(), *TargetActor->GetActorLocation().ToString());
 	}
 
 	if (CanAttack(ControlledPawn, TargetActor))

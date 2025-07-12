@@ -392,6 +392,15 @@ void AFPSCharacter::Shoot()
 void AFPSCharacter::LaunchPebble(float Force)
 {	
 }
+float AFPSCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+	// Chiama la tua funzione custom
+	TakeDamage(FMath::RoundToInt(DamageAmount));
+
+	return DamageAmount;
+}
 
 void AFPSCharacter::TakeDamage(int32 IncomingDamage)
 {
@@ -405,6 +414,7 @@ void AFPSCharacter::TakeDamage(int32 IncomingDamage)
 	if (CurrentHealth <= 0)
 	{
 		//TODO: invoke OnDeath event (to be implemented)
+		UE_LOG(LogTemp, Warning, TEXT("PLAYER DEAD"));
 	}
 }
 

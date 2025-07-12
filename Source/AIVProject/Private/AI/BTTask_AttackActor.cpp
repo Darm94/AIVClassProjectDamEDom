@@ -5,9 +5,12 @@
 #include "Enemies/FPSBehaviorTreeEnemy.h"
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 UBTTask_AttackActor::UBTTask_AttackActor()
 {
+    NodeName = "Attack Actor Task";
+    bNotifyTick = true;
 }
 
 EBTNodeResult::Type UBTTask_AttackActor::ExecuteTask(UBehaviorTreeComponent& OwnerComponent, uint8* NodeMemory)
@@ -18,9 +21,6 @@ EBTNodeResult::Type UBTTask_AttackActor::ExecuteTask(UBehaviorTreeComponent& Own
 
 void UBTTask_AttackActor::TickTask(UBehaviorTreeComponent& OwnerComponent, uint8* NodeMemory, float DeltaTime)
 {
-    //TODO: Implement shoot for enemies
-    //Call Shoot function
-    //take into account a timer for shooting
     UBlackboardComponent* BBC = OwnerComponent.GetBlackboardComponent();
     AActor* TargetActor = Cast<AActor>(BBC->GetValueAsObject(TargetActorKey.SelectedKeyName));
     if (!CanAttack(OwnerComponent.GetAIOwner()->GetPawn(), TargetActor))
@@ -28,6 +28,31 @@ void UBTTask_AttackActor::TickTask(UBehaviorTreeComponent& OwnerComponent, uint8
         BBC->SetValueAsBool(CanAttackKey.SelectedKeyName, false);
         FinishLatentTask(OwnerComponent, EBTNodeResult::Failed);
     }
+
+    // Chosen Damage
+    float DamageAmount = 20.0f;
+
+    // 1) Call Interface
+    IFPSInteractable* Interactable = Cast<IFPSInteractable>(TargetActor);
+    if (Interactable)
+    {
+        Interactable->TriggerHit(OwnerComponent.GetAIOwner()->GetPawn());
+    }else
+    {
+        // 2) ApplyDamage
+        UGameplayStatics::ApplyDamage(
+            TargetActor,
+            DamageAmount,
+            OwnerComponent.GetAIOwner(),  // InstigatorController
+            OwnerComponent.GetAIOwner()->GetPawn(), // DamageCauser
+            UDamageType::StaticClass()
+        );
+
+        
+    }
+    // 3) Finish the task, the attack condition have to be checked again
+    FinishLatentTask(OwnerComponent, EBTNodeResult::Succeeded);
+   
 }
 
 bool UBTTask_AttackActor::CanAttack(APawn* ControlledPawn, AActor* TargetActor)
