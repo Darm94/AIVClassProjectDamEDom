@@ -8,6 +8,7 @@
 
 UBTTask_ChaseActor::UBTTask_ChaseActor()
 {
+
 	NodeName = "Chase Actor";
 	bNotifyTick = true;
 }
@@ -19,7 +20,7 @@ EBTNodeResult::Type UBTTask_ChaseActor::ExecuteTask(UBehaviorTreeComponent& Owne
 	//if (TargetActor)
 	//{
 	//}
-
+	BBC->SetValueAsBool(FName("bIsAttacking"), false);
 	AAIController* EnemyController = OwnerComponent.GetAIOwner();
 	EnemyController->MoveToActor(TargetActor);
 	return EBTNodeResult::InProgress;
@@ -38,10 +39,20 @@ void UBTTask_ChaseActor::TickTask(UBehaviorTreeComponent& OwnerComponent, uint8*
 		EnemyController->MoveToActor(TargetActor);
 		//UE_LOG(LogTemp, Warning, TEXT("Move to actor %s at Location: %s"), *TargetActor->GetName(), *TargetActor->GetActorLocation().ToString());
 	}
+	
+	//TODO set this directly on Enemy?
+	FVector Velocity = ControlledPawn->GetVelocity();
+    Velocity.Z = 0.0f; // Evita inclinazioni strane
+    if (!Velocity.IsNearlyZero())
+    {
+        FRotator NewRotation = Velocity.Rotation();
+        ControlledPawn->SetActorRotation(NewRotation);
+    }
 
 	if (CanAttack(ControlledPawn, TargetActor))
 	{
 		BBC->SetValueAsBool(FName("bCanAttack"), true);
+		BBC->SetValueAsBool(FName("bIsAttacking"), true); //separated contition for animation
 		FinishLatentTask(OwnerComponent, EBTNodeResult::Succeeded);
 	}
 

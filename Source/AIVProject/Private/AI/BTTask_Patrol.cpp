@@ -43,6 +43,8 @@ void UBTTask_Patrol::TickTask(UBehaviorTreeComponent& OwnerComponent, uint8* Nod
 {
 	Super::TickTask(OwnerComponent, NodeMemory, DeltaTime);
 
+	
+
 	AAIController* AIController = OwnerComponent.GetAIOwner();
 	UBlackboardComponent* BBC = OwnerComponent.GetBlackboardComponent();
 	if (!AIController || !BBC)
@@ -54,6 +56,14 @@ void UBTTask_Patrol::TickTask(UBehaviorTreeComponent& OwnerComponent, uint8* Nod
 	if (!ControlledPawn)
 	{
 		FinishLatentTask(OwnerComponent, EBTNodeResult::Failed);
+	}
+
+	FVector Velocity = ControlledPawn->GetVelocity();
+	Velocity.Z = 0;
+	if (!Velocity.IsNearlyZero())
+	{
+		FRotator NewRotation = Velocity.Rotation();
+		ControlledPawn->SetActorRotation(NewRotation);
 	}
 
 	FVector PatrolLocation = BBC->GetValueAsVector("TargetPatrolLocation");

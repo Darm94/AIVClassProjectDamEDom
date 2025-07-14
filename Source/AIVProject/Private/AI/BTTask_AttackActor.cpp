@@ -16,6 +16,8 @@ UBTTask_AttackActor::UBTTask_AttackActor()
 EBTNodeResult::Type UBTTask_AttackActor::ExecuteTask(UBehaviorTreeComponent& OwnerComponent, uint8* NodeMemory)
 {
     //TODO:Set things to attack
+    UBlackboardComponent* BBC = OwnerComponent.GetBlackboardComponent();
+    BBC->SetValueAsBool(FName("bIsAttacking"), true);
     return EBTNodeResult::InProgress;
 }
 
@@ -26,6 +28,7 @@ void UBTTask_AttackActor::TickTask(UBehaviorTreeComponent& OwnerComponent, uint8
     if (!CanAttack(OwnerComponent.GetAIOwner()->GetPawn(), TargetActor))
     {
         BBC->SetValueAsBool(CanAttackKey.SelectedKeyName, false);
+        BBC->SetValueAsBool(FName("bIsAttacking"), false);//TODO CHANGE to key.SelectedKeyName adn implement wait in separate task(now using firs is attacking in chase actor
         FinishLatentTask(OwnerComponent, EBTNodeResult::Failed);
     }
 

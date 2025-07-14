@@ -15,6 +15,7 @@ AFPSBehaviorTreeEnemy::AFPSBehaviorTreeEnemy()
 	AIControllerClass = AFPSComplexAIController::StaticClass();
 
 	LooseChaseDistance = SightConfig->SightRadius * 1.5;
+	
 }
 
 void AFPSBehaviorTreeEnemy::ReactToSeenActor(AActor* InActor, FVector Location)
