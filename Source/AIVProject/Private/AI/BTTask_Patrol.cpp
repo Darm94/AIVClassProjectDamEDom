@@ -51,8 +51,8 @@ EBTNodeResult::Type UBTTask_Patrol::ExecuteTask(UBehaviorTreeComponent& OwnerCom
 		if (ThisEnemy && ThisEnemy->FloatingPawnMovement)
 		{
 			ThisEnemy->FloatingPawnMovement->MaxSpeed = ThisEnemy->Walkpeed;
-			ThisEnemy->FloatingPawnMovement->Acceleration = 99999.f;   // Così parte subito
-			ThisEnemy->FloatingPawnMovement->Deceleration = 99999.f;   // Così si ferma subito
+			ThisEnemy->FloatingPawnMovement->Acceleration = 99999.f;   
+			ThisEnemy->FloatingPawnMovement->Deceleration = 99999.f;   
 		}
 		return EBTNodeResult::InProgress;
 	}
