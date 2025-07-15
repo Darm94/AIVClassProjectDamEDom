@@ -32,6 +32,11 @@ EBTNodeResult::Type UBTTask_Patrol::ExecuteTask(UBehaviorTreeComponent& OwnerCom
 	//Take Enemy class and stats
 	AFPSBehaviorTreeEnemy* ThisEnemy = Cast<AFPSBehaviorTreeEnemy>(ControlledPawn);
 	FVector PatrolLocation = BBC->GetValueAsVector("TargetPatrolLocation");
+	if (PatrolLocation.IsNearlyZero())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[Patrol Execute] Fallback: PatrolLocation is ZERO — failing!"));
+		return EBTNodeResult::Failed;
+	}
 
 	UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetCurrent(GetWorld());
 	if (NavSystem)
@@ -83,6 +88,21 @@ void UBTTask_Patrol::TickTask(UBehaviorTreeComponent& OwnerComponent, uint8* Nod
 	}
 
 	FVector PatrolLocation = BBC->GetValueAsVector("TargetPatrolLocation");
+	//Fallback if TargetPatrolLocation is 0
+	if (PatrolLocation.IsNearlyZero())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[Patrol Tick] Fallback: PatrolLocation is ZERO — forcing next point!"));
+		FinishLatentTask(OwnerComponent, EBTNodeResult::Succeeded);
+		return;
+	}
+
+	// Fallback from chase
+	if (HasReachedTarget(ControlledPawn, PatrolLocation, 50))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[Patrol Tick] Fallback: Already at patrol point — forcing next!"));
+		FinishLatentTask(OwnerComponent, EBTNodeResult::Succeeded);
+		return;
+	}
 	//Tick Movement
 	FVector Direction = (PatrolLocation - ControlledPawn->GetActorLocation()).GetSafeNormal();
 
