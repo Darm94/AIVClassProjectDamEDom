@@ -11,6 +11,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Data/DataManager.h"
 #include "UI/FPSHUDWidget.h"
+#include "RespawnComponent.h"
 #include "Enemies/EnemiesManagerSubsystem.h"
 
 // Sets default values
@@ -18,6 +19,7 @@ AFPSCharacter::AFPSCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	RespawnComponent = CreateDefaultSubobject<URespawnComponent>(TEXT("RespawnComponent"));
 
 	//CreatingCameraComponent
 	FPSCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FPSCamera"));
@@ -415,6 +417,11 @@ void AFPSCharacter::TakeDamage(int32 IncomingDamage)
 	{
 		//TODO: invoke OnDeath event (to be implemented)
 		UE_LOG(LogTemp, Warning, TEXT("PLAYER DEAD"));
+		if (RespawnComponent)
+		{
+			RespawnComponent->RespawnPlayer();
+			CurrentHealth = MaxHealth; // Reset HP 
+		}
 	}
 }
 

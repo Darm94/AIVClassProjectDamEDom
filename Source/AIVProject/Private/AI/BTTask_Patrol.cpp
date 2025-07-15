@@ -5,6 +5,7 @@
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "NavigationSystem.h"
+#include <Enemies/FPSBehaviorTreeEnemy.h>
 
 UBTTask_Patrol::UBTTask_Patrol()
 {
@@ -15,6 +16,7 @@ UBTTask_Patrol::UBTTask_Patrol()
 EBTNodeResult::Type UBTTask_Patrol::ExecuteTask(UBehaviorTreeComponent& OwnerComponent, uint8* NodeMemory)
 {
 	AAIController* AIController = OwnerComponent.GetAIOwner();
+	
 	UBlackboardComponent* BBC = OwnerComponent.GetBlackboardComponent();
 	if (!AIController || !BBC)
 	{
@@ -27,12 +29,26 @@ EBTNodeResult::Type UBTTask_Patrol::ExecuteTask(UBehaviorTreeComponent& OwnerCom
 		return EBTNodeResult::Failed;
 	}
 
+	//Take Enemy class and stats
+	AFPSBehaviorTreeEnemy* ThisEnemy = Cast<AFPSBehaviorTreeEnemy>(ControlledPawn);
 	FVector PatrolLocation = BBC->GetValueAsVector("TargetPatrolLocation");
 
 	UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetCurrent(GetWorld());
 	if (NavSystem)
 	{
+		/*
+		if (ThisEnemy && ThisEnemy->FloatingPawnMovement)
+		{
+			ThisEnemy->FloatingPawnMovement->MaxSpeed = ThisEnemy->Walkpeed;
+		}
 		AIController->MoveToLocation(PatrolLocation);
+		*/
+		if (ThisEnemy && ThisEnemy->FloatingPawnMovement)
+		{
+			ThisEnemy->FloatingPawnMovement->MaxSpeed = ThisEnemy->Walkpeed;
+			ThisEnemy->FloatingPawnMovement->Acceleration = 99999.f;   // Così parte subito
+			ThisEnemy->FloatingPawnMovement->Deceleration = 99999.f;   // Così si ferma subito
+		}
 		return EBTNodeResult::InProgress;
 	}
 
@@ -67,6 +83,20 @@ void UBTTask_Patrol::TickTask(UBehaviorTreeComponent& OwnerComponent, uint8* Nod
 	}
 
 	FVector PatrolLocation = BBC->GetValueAsVector("TargetPatrolLocation");
+	//Tick Movement
+	FVector Direction = (PatrolLocation - ControlledPawn->GetActorLocation()).GetSafeNormal();
+
+	UE_LOG(LogTemp, Warning, TEXT("Direction: %s"), *Direction.ToString());
+
+	if (!Direction.IsNearlyZero())
+	{
+		ControlledPawn->AddMovementInput(Direction, 1.0f);
+		UE_LOG(LogTemp, Warning, TEXT("AddMovementInput CALLED"));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Direction is ZERO — NO INPUT"));
+	}
 
 	if (HasReachedTarget(ControlledPawn, PatrolLocation, 200))
 	{

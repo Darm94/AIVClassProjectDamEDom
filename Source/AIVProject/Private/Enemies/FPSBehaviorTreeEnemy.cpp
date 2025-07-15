@@ -15,8 +15,10 @@ AFPSBehaviorTreeEnemy::AFPSBehaviorTreeEnemy()
 	AIControllerClass = AFPSComplexAIController::StaticClass();
 
 	LooseChaseDistance = SightConfig->SightRadius * 1.5;
-	
+	FloatingPawnMovement = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("FloatingPawnMovement"));
+
 }
+
 
 void AFPSBehaviorTreeEnemy::ReactToSeenActor(AActor* InActor, FVector Location)
 {

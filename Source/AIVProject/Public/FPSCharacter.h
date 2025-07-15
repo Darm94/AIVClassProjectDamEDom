@@ -37,6 +37,9 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "AI")
 	class UAIPerceptionStimuliSourceComponent* PerceptionStimuliSource;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
+	class URespawnComponent* RespawnComponent;
+
 	virtual FGenericTeamId GetGenericTeamId() const override { return TeamID; };
 
 #pragma region Movement

@@ -5,7 +5,9 @@
 #include "CoreMinimal.h"
 #include "Enemies/GenericEnemy.h"
 #include "AI/SmartPath.h"
+#include "GameFramework/FloatingPawnMovement.h"
 #include "FPSBehaviorTreeEnemy.generated.h"
+
 
 /**
  * 
@@ -32,6 +34,17 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="AI")
 	float LooseChaseDistance;
+
+	//Walk Speed Reference for animation
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+	float Walkpeed = 70.0;
+
+	//Max Speed Reference for animation
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+	float MaxSpeed = 250.0;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
+	UFloatingPawnMovement* FloatingPawnMovement;
 
 	virtual void ReactToSeenActor(AActor* InActor, FVector Location) override;
 

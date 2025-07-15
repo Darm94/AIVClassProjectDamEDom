@@ -22,6 +22,13 @@ EBTNodeResult::Type UBTTask_ChaseActor::ExecuteTask(UBehaviorTreeComponent& Owne
 	//}
 	BBC->SetValueAsBool(FName("bIsAttacking"), false);
 	AAIController* EnemyController = OwnerComponent.GetAIOwner();
+	//Take Enemy class and stats
+	AFPSBehaviorTreeEnemy* ThisEnemy = Cast<AFPSBehaviorTreeEnemy>(EnemyController->GetPawn());
+	FVector PatrolLocation = BBC->GetValueAsVector("TargetPatrolLocation");
+	if (ThisEnemy && ThisEnemy->FloatingPawnMovement)
+	{
+		ThisEnemy->FloatingPawnMovement->MaxSpeed = ThisEnemy->MaxSpeed;
+	}
 	EnemyController->MoveToActor(TargetActor);
 	return EBTNodeResult::InProgress;
 }
