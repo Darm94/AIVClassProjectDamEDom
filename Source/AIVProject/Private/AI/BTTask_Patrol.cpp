@@ -41,6 +41,7 @@ EBTNodeResult::Type UBTTask_Patrol::ExecuteTask(UBehaviorTreeComponent& OwnerCom
 	UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetCurrent(GetWorld());
 	if (NavSystem)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("NAVSYSTEM"));
 		/*
 		if (ThisEnemy && ThisEnemy->FloatingPawnMovement)
 		{
@@ -55,6 +56,9 @@ EBTNodeResult::Type UBTTask_Patrol::ExecuteTask(UBehaviorTreeComponent& OwnerCom
 			ThisEnemy->FloatingPawnMovement->Deceleration = 99999.f;   
 		}
 		return EBTNodeResult::InProgress;
+	}
+	else {
+		UE_LOG(LogTemp, Warning, TEXT("no-NAVSYSTEM"));
 	}
 
 	return EBTNodeResult::Failed;
@@ -106,12 +110,12 @@ void UBTTask_Patrol::TickTask(UBehaviorTreeComponent& OwnerComponent, uint8* Nod
 	//Tick Movement
 	FVector Direction = (PatrolLocation - ControlledPawn->GetActorLocation()).GetSafeNormal();
 
-	UE_LOG(LogTemp, Warning, TEXT("Direction: %s"), *Direction.ToString());
+	//UE_LOG(LogTemp, Warning, TEXT("Direction: %s"), *Direction.ToString());
 
 	if (!Direction.IsNearlyZero())
 	{
 		ControlledPawn->AddMovementInput(Direction, 1.0f);
-		UE_LOG(LogTemp, Warning, TEXT("AddMovementInput CALLED"));
+		//UE_LOG(LogTemp, Warning, TEXT("AddMovementInput CALLED"));
 	}
 	else
 	{
