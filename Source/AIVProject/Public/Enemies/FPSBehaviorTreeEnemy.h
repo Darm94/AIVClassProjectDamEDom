@@ -43,11 +43,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
 	float MaxSpeed = 250.0;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Movement")
-	UFloatingPawnMovement* FloatingPawnMovement;
-
 	virtual void ReactToSeenActor(AActor* InActor, FVector Location) override;
 
 	virtual void ReactToHeardActor(AActor* InActor, FVector Location) override;
-	
+
+protected:
+	virtual void PossessedBy(AController* NewController) override;
 };

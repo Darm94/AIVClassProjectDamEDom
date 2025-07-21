@@ -14,40 +14,40 @@ UHighAlertComponent::UHighAlertComponent()
 
 void UHighAlertComponent::EnterState()
 {
-	ABaseEnemy* BaseEnemy = Cast<ABaseEnemy>(GetOwner());
-	if (BaseEnemy)
-	{
-		BaseEnemy->SightConfig->SightRadius = BaseEnemy->SightConfig->SightRadius * BaseEnemy->HighAlertMultiplier;
-		BaseEnemy->SightConfig->LoseSightRadius = BaseEnemy->SightConfig->LoseSightRadius * BaseEnemy->HighAlertMultiplier;
-		BaseEnemy->HearingConfig->HearingRange = BaseEnemy->HearingConfig->HearingRange * BaseEnemy->HighAlertMultiplier;
-		BaseEnemy->HearingConfig->LoSHearingRange = BaseEnemy->HearingConfig->LoSHearingRange * BaseEnemy->HighAlertMultiplier;
-
-		//TODO: maybe increase movement speed
-
-		/*float DistanceThreshold = 2000.0f;
-		if (FVector::Distance(AlarmOrigin, TargetLocation) < DistanceThreshold)
-		{
-			AAIController* EnemyController = Cast<AAIController>(Cast<APawn>(GetOwner())->GetController());
-			if (EnemyController)
-			{
-				EnemyController->MoveToLocation(TargetLocation, 200.0f);
-			}
-		}*/
-	}
+	// ABaseEnemy* BaseEnemy = Cast<ABaseEnemy>(GetOwner());
+	// if (BaseEnemy)
+	// {
+	// 	BaseEnemy->SightConfig->SightRadius = BaseEnemy->SightConfig->SightRadius * BaseEnemy->HighAlertMultiplier;
+	// 	BaseEnemy->SightConfig->LoseSightRadius = BaseEnemy->SightConfig->LoseSightRadius * BaseEnemy->HighAlertMultiplier;
+	// 	BaseEnemy->HearingConfig->HearingRange = BaseEnemy->HearingConfig->HearingRange * BaseEnemy->HighAlertMultiplier;
+	// 	BaseEnemy->HearingConfig->LoSHearingRange = BaseEnemy->HearingConfig->LoSHearingRange * BaseEnemy->HighAlertMultiplier;
+	//
+	// 	//TODO: maybe increase movement speed
+	//
+	// 	/*float DistanceThreshold = 2000.0f;
+	// 	if (FVector::Distance(AlarmOrigin, TargetLocation) < DistanceThreshold)
+	// 	{
+	// 		AAIController* EnemyController = Cast<AAIController>(Cast<APawn>(GetOwner())->GetController());
+	// 		if (EnemyController)
+	// 		{
+	// 			EnemyController->MoveToLocation(TargetLocation, 200.0f);
+	// 		}
+	// 	}*/
+	// }
 }
 
 void UHighAlertComponent::ExitState()
 {
-	ABaseEnemy* BaseEnemy = Cast<ABaseEnemy>(GetOwner());
-	if (BaseEnemy)
-	{
-		BaseEnemy->SightConfig->SightRadius = BaseEnemy->SightConfig->SightRadius / BaseEnemy->HighAlertMultiplier;
-		BaseEnemy->SightConfig->LoseSightRadius = BaseEnemy->SightConfig->LoseSightRadius / BaseEnemy->HighAlertMultiplier;
-		BaseEnemy->HearingConfig->HearingRange = BaseEnemy->HearingConfig->HearingRange / BaseEnemy->HighAlertMultiplier;
-		BaseEnemy->HearingConfig->LoSHearingRange = BaseEnemy->HearingConfig->LoSHearingRange / BaseEnemy->HighAlertMultiplier;
-
-		//TODO: maybe reduce movement speed
-	}
+	// ABaseEnemy* BaseEnemy = Cast<ABaseEnemy>(GetOwner());
+	// if (BaseEnemy)
+	// {
+	// 	BaseEnemy->SightConfig->SightRadius = BaseEnemy->SightConfig->SightRadius / BaseEnemy->HighAlertMultiplier;
+	// 	BaseEnemy->SightConfig->LoseSightRadius = BaseEnemy->SightConfig->LoseSightRadius / BaseEnemy->HighAlertMultiplier;
+	// 	BaseEnemy->HearingConfig->HearingRange = BaseEnemy->HearingConfig->HearingRange / BaseEnemy->HighAlertMultiplier;
+	// 	BaseEnemy->HearingConfig->LoSHearingRange = BaseEnemy->HearingConfig->LoSHearingRange / BaseEnemy->HighAlertMultiplier;
+	//
+	// 	//TODO: maybe reduce movement speed
+	// }
 }
 
 void UHighAlertComponent::PlayState()

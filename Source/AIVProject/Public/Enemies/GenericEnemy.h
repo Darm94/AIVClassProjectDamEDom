@@ -3,13 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Pawn.h"
+#include "GameFramework/Character.h"
 #include "FPSInteractable.h"
+#include "AI/FPSComplexAIController.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "GenericEnemy.generated.h"
 
 UCLASS(Abstract)
-class AIVPROJECT_API AGenericEnemy : public APawn, public IFPSInteractable
+class AIVPROJECT_API AGenericEnemy : public ACharacter, public IFPSInteractable
 {
 	GENERATED_BODY()
 
@@ -17,33 +18,28 @@ public:
 	// Sets default values for this pawn's properties
 	AGenericEnemy();
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
-	class UCapsuleComponent* CapsuleComponent;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
-	class USkeletalMeshComponent* SkeletalMesh;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
 	float Life = 100.0f;
-
-	UPROPERTY(VisibleAnywhere, Category = "AI")
-	UAIPerceptionComponent* AIPerceptionComponent;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
-	class UAISenseConfig_Sight* SightConfig;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
-	class UAISenseConfig_Hearing* HearingConfig;
 
 	UFUNCTION()
 	virtual void HighAlert() {};
 
 protected:
+
+	UPROPERTY(BlueprintReadOnly, Category = "AI")
+	UAIPerceptionComponent* AIPerceptionComponent;
+	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 	UFUNCTION()
-	virtual void OnPerceptionUpdated(const TArray<AActor*>& UpdatedActors);
+	virtual void PossessedBy(AController* NewController) override;
+
+	UFUNCTION()
+	virtual void UnPossessed() override;
+	
+	UFUNCTION()
+	virtual void PerceptionUpdated(const TArray<AActor*>& UpdatedActors);
 
 	UFUNCTION()
 	virtual void ReactToSeenActor(AActor* InActor, FVector Location) {};
@@ -67,5 +63,4 @@ public:
 	virtual bool TriggerInteraction(AActor* InInstigator) override { return false; };
 
 	virtual bool TriggerHit(AActor* InInstigator) override { return false; };
-
 };

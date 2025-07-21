@@ -7,6 +7,8 @@
 #include "NavigationSystem.h"
 #include <Enemies/FPSBehaviorTreeEnemy.h>
 
+#include "GameFramework/CharacterMovementComponent.h"
+
 UBTTask_Patrol::UBTTask_Patrol()
 {
 	NodeName = "Patrol";
@@ -34,14 +36,14 @@ EBTNodeResult::Type UBTTask_Patrol::ExecuteTask(UBehaviorTreeComponent& OwnerCom
 	FVector PatrolLocation = BBC->GetValueAsVector("TargetPatrolLocation");
 	if (PatrolLocation.IsNearlyZero())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("[Patrol Execute] Fallback: PatrolLocation is ZERO — failing!"));
+		UE_LOG(LogTemp, Warning, TEXT("[Patrol Execute] Fallback: PatrolLocation is ZERO ï¿½ failing!"));
 		return EBTNodeResult::Failed;
 	}
 
 	UNavigationSystemV1* NavSystem = UNavigationSystemV1::GetCurrent(GetWorld());
 	if (NavSystem)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("NAVSYSTEM"));
+		//UE_LOG(LogTemp, Warning, TEXT("NAVSYSTEM"));
 		/*
 		if (ThisEnemy && ThisEnemy->FloatingPawnMovement)
 		{
@@ -49,11 +51,11 @@ EBTNodeResult::Type UBTTask_Patrol::ExecuteTask(UBehaviorTreeComponent& OwnerCom
 		}
 		AIController->MoveToLocation(PatrolLocation);
 		*/
-		if (ThisEnemy && ThisEnemy->FloatingPawnMovement)
+		if (ThisEnemy && ThisEnemy->GetCharacterMovement())
 		{
-			ThisEnemy->FloatingPawnMovement->MaxSpeed = ThisEnemy->Walkpeed;
-			ThisEnemy->FloatingPawnMovement->Acceleration = 99999.f;   
-			ThisEnemy->FloatingPawnMovement->Deceleration = 99999.f;   
+			ThisEnemy->GetCharacterMovement()->MaxWalkSpeed = ThisEnemy->Walkpeed;
+			ThisEnemy->GetCharacterMovement()->MaxAcceleration = 99999.f;   
+			ThisEnemy->GetCharacterMovement()->BrakingDecelerationWalking = 99999.f;   
 		}
 		return EBTNodeResult::InProgress;
 	}
@@ -95,7 +97,7 @@ void UBTTask_Patrol::TickTask(UBehaviorTreeComponent& OwnerComponent, uint8* Nod
 	//Fallback if TargetPatrolLocation is 0
 	if (PatrolLocation.IsNearlyZero())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("[Patrol Tick] Fallback: PatrolLocation is ZERO — forcing next point!"));
+		UE_LOG(LogTemp, Warning, TEXT("[Patrol Tick] Fallback: PatrolLocation is ZERO ï¿½ forcing next point!"));
 		FinishLatentTask(OwnerComponent, EBTNodeResult::Succeeded);
 		return;
 	}
@@ -103,7 +105,7 @@ void UBTTask_Patrol::TickTask(UBehaviorTreeComponent& OwnerComponent, uint8* Nod
 	// Fallback from chase
 	if (HasReachedTarget(ControlledPawn, PatrolLocation, 50))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("[Patrol Tick] Fallback: Already at patrol point — forcing next!"));
+		UE_LOG(LogTemp, Warning, TEXT("[Patrol Tick] Fallback: Already at patrol point ï¿½ forcing next!"));
 		FinishLatentTask(OwnerComponent, EBTNodeResult::Succeeded);
 		return;
 	}
@@ -119,7 +121,7 @@ void UBTTask_Patrol::TickTask(UBehaviorTreeComponent& OwnerComponent, uint8* Nod
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Direction is ZERO — NO INPUT"));
+		UE_LOG(LogTemp, Warning, TEXT("Direction is ZERO ï¿½ NO INPUT"));
 	}
 
 	if (HasReachedTarget(ControlledPawn, PatrolLocation, 200))

@@ -5,6 +5,7 @@
 #include "AI/FPSComplexAIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Enemies/FPSBehaviorTreeEnemy.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 UBTTask_ChaseActor::UBTTask_ChaseActor()
 {
@@ -25,9 +26,9 @@ EBTNodeResult::Type UBTTask_ChaseActor::ExecuteTask(UBehaviorTreeComponent& Owne
 	//Take Enemy class and stats
 	AFPSBehaviorTreeEnemy* ThisEnemy = Cast<AFPSBehaviorTreeEnemy>(EnemyController->GetPawn());
 	FVector PatrolLocation = BBC->GetValueAsVector("TargetPatrolLocation");
-	if (ThisEnemy && ThisEnemy->FloatingPawnMovement)
+	if (ThisEnemy && ThisEnemy->GetCharacterMovement())
 	{
-		ThisEnemy->FloatingPawnMovement->MaxSpeed = ThisEnemy->MaxSpeed;
+		ThisEnemy->GetCharacterMovement()->MaxWalkSpeed = ThisEnemy->MaxSpeed;
 	}
 	EnemyController->MoveToActor(TargetActor);
 	return EBTNodeResult::InProgress;

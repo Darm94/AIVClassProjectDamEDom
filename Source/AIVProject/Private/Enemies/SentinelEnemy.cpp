@@ -10,15 +10,15 @@
 
 ASentinelEnemy::ASentinelEnemy()
 {
-	SightConfig->SightRadius = 2000.0f;
-	SightConfig->LoseSightRadius = 2500.0f;
-	SightConfig->PeripheralVisionAngleDegrees = 100.0f;
-	SightConfig->SetMaxAge(5.0f);
-
-	HearingConfig->HearingRange = 1200.0;
-	HearingConfig->LoSHearingRange = 2000.0;
-	HearingConfig->bUseLoSHearing = true;
-	HearingConfig->SetMaxAge(5.0);
+	// SightConfig->SightRadius = 2000.0f;
+	// SightConfig->LoseSightRadius = 2500.0f;
+	// SightConfig->PeripheralVisionAngleDegrees = 100.0f;
+	// SightConfig->SetMaxAge(5.0f);
+	//
+	// HearingConfig->HearingRange = 1200.0;
+	// HearingConfig->LoSHearingRange = 2000.0;
+	// HearingConfig->bUseLoSHearing = true;
+	// HearingConfig->SetMaxAge(5.0);
 }
 
 void ASentinelEnemy::ReactToSeenActor(AActor* InActor, FVector Location)

@@ -39,7 +39,7 @@ EBTNodeResult::Type UBTTask_GetPointOnPath::ExecuteTask(UBehaviorTreeComponent& 
 		return EBTNodeResult::Succeeded;
 	}*/
 	AFPSBehaviorTreeEnemy* ControlledEnemy = Cast<AFPSBehaviorTreeEnemy>(AIController->GetPawn());
-	if (ControlledEnemy)
+	if (ControlledEnemy && ControlledEnemy->EnemyPath)
 	{
 		TArray<FVector> PatrolPoints = ControlledEnemy->EnemyPath->GetSplinePoints();
 		if (PatrolPoints.Num() == 0)

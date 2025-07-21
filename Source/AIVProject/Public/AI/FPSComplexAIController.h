@@ -19,11 +19,22 @@ public:
 
 	virtual void OnPossess(APawn* InPawn) override;
 
+	virtual ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const override;
+
 	UPROPERTY()
 	class UBehaviorTreeComponent* BTC;
 
 	UPROPERTY()
 	class UBlackboardComponent* BBC;
+
+	UPROPERTY(VisibleAnywhere, Category = "AI")
+	UAIPerceptionComponent* AIPerceptionComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+	class UAISenseConfig_Sight* SightConfig;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
+	class UAISenseConfig_Hearing* HearingConfig;
 
 	//FBlackboard::FKey 
 	

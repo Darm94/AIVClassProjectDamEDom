@@ -17,6 +17,8 @@
 // Sets default values
 AFPSCharacter::AFPSCharacter()
 {
+	TeamID = FGenericTeamId(2);
+	
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	RespawnComponent = CreateDefaultSubobject<URespawnComponent>(TEXT("RespawnComponent"));
@@ -33,9 +35,8 @@ AFPSCharacter::AFPSCharacter()
 	//register senses
 	PerceptionStimuliSource->RegisterForSense(TSubclassOf<UAISense_Hearing>());
 	PerceptionStimuliSource->RegisterForSense(TSubclassOf<UAISense_Sight>());
-	PerceptionStimuliSource->RegisterWithPerceptionSystem();
 
-	TeamID = FGenericTeamId(2);
+	
 
 
 	MinimapCaptureComponent = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("MinimapCaptureComponent"));
@@ -55,7 +56,7 @@ AFPSCharacter::AFPSCharacter()
 void AFPSCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	PerceptionStimuliSource->RegisterWithPerceptionSystem();
 	LoadGame();
 
 	if (HUDWidgetClass)

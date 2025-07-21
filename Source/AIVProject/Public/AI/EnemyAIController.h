@@ -16,6 +16,4 @@ class AIVPROJECT_API AEnemyAIController : public AAIController
 
 public:
 	AEnemyAIController();	
-
-	virtual ETeamAttitude::Type GetTeamAttitudeTowards(const AActor& Other) const override;
 };
