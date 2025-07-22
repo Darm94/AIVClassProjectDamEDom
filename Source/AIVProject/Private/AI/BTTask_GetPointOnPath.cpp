@@ -5,6 +5,7 @@
 #include "AIController.h"
 #include "Enemies/FPSBehaviorTreeEnemy.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "BehaviorTree/Blackboard/BlackboardKeyType_Bool.h"
 #include "BehaviorTree/Blackboard/BlackboardKeyType_Vector.h"
 
 UBTTask_GetPointOnPath::UBTTask_GetPointOnPath()

@@ -53,7 +53,7 @@ EBTNodeResult::Type UBTTask_Patrol::ExecuteTask(UBehaviorTreeComponent& OwnerCom
 		*/
 		if (ThisEnemy && ThisEnemy->GetCharacterMovement())
 		{
-			ThisEnemy->GetCharacterMovement()->MaxWalkSpeed = ThisEnemy->Walkpeed;
+			ThisEnemy->GetCharacterMovement()->MaxWalkSpeed = ThisEnemy->Walkspeed;
 			ThisEnemy->GetCharacterMovement()->MaxAcceleration = 99999.f;   
 			ThisEnemy->GetCharacterMovement()->BrakingDecelerationWalking = 99999.f;   
 		}
@@ -69,9 +69,7 @@ EBTNodeResult::Type UBTTask_Patrol::ExecuteTask(UBehaviorTreeComponent& OwnerCom
 void UBTTask_Patrol::TickTask(UBehaviorTreeComponent& OwnerComponent, uint8* NodeMemory, float DeltaTime)
 {
 	Super::TickTask(OwnerComponent, NodeMemory, DeltaTime);
-
 	
-
 	AAIController* AIController = OwnerComponent.GetAIOwner();
 	UBlackboardComponent* BBC = OwnerComponent.GetBlackboardComponent();
 	if (!AIController || !BBC)
@@ -86,7 +84,6 @@ void UBTTask_Patrol::TickTask(UBehaviorTreeComponent& OwnerComponent, uint8* Nod
 	}
 
 	FVector Velocity = ControlledPawn->GetVelocity();
-	Velocity.Z = 0;
 	if (!Velocity.IsNearlyZero())
 	{
 		FRotator NewRotation = Velocity.Rotation();

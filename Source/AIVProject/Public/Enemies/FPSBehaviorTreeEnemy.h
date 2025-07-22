@@ -37,7 +37,7 @@ public:
 
 	//Walk Speed Reference for animation
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")
-	float Walkpeed = 70.0;
+	float Walkspeed = 100.0;
 
 	//Max Speed Reference for animation
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI")

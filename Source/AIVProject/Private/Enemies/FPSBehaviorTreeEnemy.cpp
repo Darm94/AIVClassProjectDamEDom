@@ -5,6 +5,7 @@
 #include "AI/FPSComplexAIController.h"
 #include "FPSCharacter.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Perception/AISenseConfig_Sight.h"
 
 
@@ -35,7 +36,8 @@ void AFPSBehaviorTreeEnemy::ReactToHeardActor(AActor* InActor, FVector Location)
 		AFPSComplexAIController* EnemyController = Cast<AFPSComplexAIController>(GetController());
 		if (Player && EnemyController)
 		{
-			EnemyController->BBC->SetValueAsObject(FName("TargetChaseActor"), InActor);
+			EnemyController->BBC->SetValueAsVector(FName("TargetPatrolLocation"), Location);
+			GetCharacterMovement()->MaxWalkSpeed = MaxSpeed;
 		}
 	}
 }
