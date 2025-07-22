@@ -9,6 +9,7 @@
 
 //void FuncName();
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnPerceived, AActor*, ActorSoundingAlarm, AActor*, ActorTriggeringAlarm);
+DECLARE_MULTICAST_DELEGATE_OneParam(FOnEnemyTracked, AActor*);
 
 //
 //DECLARE_DELEGATE_RetVal(int32, FDelegateRetVal);
@@ -33,6 +34,9 @@ public:
 
 	UPROPERTY(BlueprintCallable, BlueprintAssignable)
 	FOnPerceived OnHighAlert;
+
+	FOnEnemyTracked OnEnemyAdded;
+	FOnEnemyTracked OnEnemyRemoved;
 
 	UFUNCTION(BlueprintCallable)
 	TArray<ABaseEnemy*> SpawnBaseEnemies(int32 NumEnemies, FVector Location);

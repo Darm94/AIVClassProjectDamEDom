@@ -13,14 +13,16 @@
 #include "UI/FPSHUDWidget.h"
 #include "RespawnComponent.h"
 #include "Enemies/EnemiesManagerSubsystem.h"
+#include "Engine/DamageEvents.h"
 
 // Sets default values
 AFPSCharacter::AFPSCharacter()
 {
 	TeamID = FGenericTeamId(2);
-	
- 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
 	RespawnComponent = CreateDefaultSubobject<URespawnComponent>(TEXT("RespawnComponent"));
 
 	//CreatingCameraComponent
@@ -30,19 +32,18 @@ AFPSCharacter::AFPSCharacter()
 	FPSCamera->bUsePawnControlRotation = true;
 
 	//create stimuli source
-	PerceptionStimuliSource = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(TEXT("StimuliSourceComponent"));
+	PerceptionStimuliSource = CreateDefaultSubobject<UAIPerceptionStimuliSourceComponent>(
+		TEXT("StimuliSourceComponent"));
 
 	//register senses
 	PerceptionStimuliSource->RegisterForSense(TSubclassOf<UAISense_Hearing>());
 	PerceptionStimuliSource->RegisterForSense(TSubclassOf<UAISense_Sight>());
 
-	
-
 
 	MinimapCaptureComponent = CreateDefaultSubobject<USceneCaptureComponent2D>(TEXT("MinimapCaptureComponent"));
 	MinimapCaptureComponent->SetupAttachment(RootComponent);
 	MinimapCaptureComponent->ProjectionType = ECameraProjectionMode::Orthographic;
-	MinimapCaptureComponent->OrthoWidth = 4096.0f;
+	MinimapCaptureComponent->OrthoWidth = 1024.0f;
 	MinimapCaptureComponent->CaptureSource = ESceneCaptureSource::SCS_FinalColorLDR;
 	MinimapCaptureComponent->bCaptureEveryFrame = true;
 
@@ -66,21 +67,36 @@ void AFPSCharacter::BeginPlay()
 		{
 			HUDWidget->AddToViewport();
 			HUDWidget->UpdateHealth(CurrentHealth);
-			HUDWidget->UpdateAmmo(CurrentAmmo,MaxAmmo);
+			HUDWidget->UpdateAmmo(CurrentAmmo, MaxAmmo);
 
 			MinimapCaptureComponent->TextureTarget = MinimapRenderTarget;
 			HUDWidget->MinimapActor = this;
 
-			UEnemiesManagerSubsystem* EnemiesManager = GetWorld()->GetSubsystem<UEnemiesManagerSubsystem>();			
+			UEnemiesManagerSubsystem* EnemiesManager = GetWorld()->GetSubsystem<UEnemiesManagerSubsystem>();
 
 			MinimapTrackedActors.Append(EnemiesManager->GetActiveEnemies());
 			MinimapCaptureComponent->HiddenActors.Append(MinimapTrackedActors);
 			MinimapCaptureComponent->HiddenActors.Add(this);
 
-			//TODO: Add new tracked enemies whenever new enemies are spawn and hide them from scene capture component.
-			//Add a function that does it bind it to the spawning event
+			EnemiesManager->OnEnemyAdded.AddLambda([this](AActor* EnemyActor)
+			{
+				if (!MinimapCaptureComponent->HiddenActors.Contains(EnemyActor))
+				{
+					MinimapCaptureComponent->HiddenActors.Add(EnemyActor);
+					MinimapTrackedActors.Add(EnemyActor);
+				}
+			});
 
-			HUDWidget->UpdateMinimapIcons(MinimapTrackedActors, MinimapIconTexture);
+			EnemiesManager->OnEnemyRemoved.AddLambda([this](AActor* EnemyActor)
+			{
+				if (MinimapCaptureComponent->HiddenActors.Contains(EnemyActor))
+				{
+					MinimapCaptureComponent->HiddenActors.Remove(EnemyActor);
+					MinimapTrackedActors.Remove(EnemyActor);
+				}
+			});
+
+			HUDWidget->UpdateMinimapIcons(MinimapTrackedActors, MinimapPlayerIconTexture, MinimapEnemyIconTexture);
 		}
 	}
 }
@@ -98,12 +114,11 @@ void AFPSCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if(HUDWidget)
+	if (HUDWidget)
 	{
 		//To optimize we can update it one every 2 or three frames
-		HUDWidget->UpdateMinimapIcons(MinimapTrackedActors, MinimapIconTexture);
+		HUDWidget->UpdateMinimapIcons(MinimapTrackedActors, MinimapPlayerIconTexture, MinimapEnemyIconTexture);
 	}
-
 }
 
 // Called to bind functionality to input
@@ -146,7 +161,7 @@ void AFPSCharacter::LookUp(float Value)
 	float PitchValue = Value;
 	if (InvertYAxis)
 	{
-		PitchValue*=-1;
+		PitchValue *= -1;
 	}
 	AddControllerPitchInput(PitchValue);
 }
@@ -173,7 +188,9 @@ void AFPSCharacter::Interact()
 		UWorld* CurrentWorld = GetWorld();
 
 
-		bool bSuccess = CurrentWorld->SweepMultiByChannel(HitResults, Start, Start, FQuat::Identity, ECollisionChannel::ECC_GameTraceChannel1, FCollisionShape::MakeSphere(InteractRadius), QueryParams);
+		bool bSuccess = CurrentWorld->SweepMultiByChannel(HitResults, Start, Start, FQuat::Identity,
+		                                                  ECollisionChannel::ECC_GameTraceChannel1,
+		                                                  FCollisionShape::MakeSphere(InteractRadius), QueryParams);
 #if WITH_EDITOR
 		DrawDebugSphere(CurrentWorld, Start, InteractRadius, 100, FColor::Red, false, 0.2, 0, 1);
 #endif
@@ -200,7 +217,8 @@ void AFPSCharacter::Interact()
 					{
 						FHitResult HitResult;
 						FVector End = Start + ObjDir * InteractRadius;
-						bool bHasHitSomething = CurrentWorld->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, QueryParams);
+						bool bHasHitSomething = CurrentWorld->LineTraceSingleByChannel(
+							HitResult, Start, End, ECC_Visibility, QueryParams);
 						if (bHasHitSomething && HitResult.GetActor() != HitActor)
 						{
 							return;
@@ -212,11 +230,10 @@ void AFPSCharacter::Interact()
 							InterfaceInstance->TriggerInteraction(this);
 							return;
 						}
-
 					}
 				}
 			}
-		}	
+		}
 	}
 }
 
@@ -230,7 +247,8 @@ void AFPSCharacter::Shoot()
 			HUDWidget->UpdateAmmo(CurrentAmmo, MaxAmmo);
 		}
 		//USoundBase* Sound;
-		FSoftObjectPath SoundAssetPath(TEXT("/Game/FPWeapon/Audio/FirstPersonTemplateWeaponFire02.FirstPersonTemplateWeaponFire02"));
+		FSoftObjectPath SoundAssetPath(
+			TEXT("/Game/FPWeapon/Audio/FirstPersonTemplateWeaponFire02.FirstPersonTemplateWeaponFire02"));
 		UObject* LoadedObj = SoundAssetPath.TryLoad();
 		if (LoadedObj)
 		{
@@ -257,7 +275,9 @@ void AFPSCharacter::Shoot()
 			//Get Enemies manager subsystem
 			//Access the Active enemies list
 
-			bool bSuccess = CurrentWorld->SweepMultiByChannel(HitResults, Start, Start, FQuat::Identity, ECollisionChannel::ECC_GameTraceChannel2, FCollisionShape::MakeSphere(ShootDistance), QueryParams);
+			bool bSuccess = CurrentWorld->SweepMultiByChannel(HitResults, Start, Start, FQuat::Identity,
+			                                                  ECollisionChannel::ECC_GameTraceChannel2,
+			                                                  FCollisionShape::MakeSphere(ShootDistance), QueryParams);
 
 #if WITH_EDITOR
 			DrawDebugSphere(CurrentWorld, Start, ShootDistance, 100, FColor::Red, false, 0.2, 0, 1);
@@ -285,17 +305,23 @@ void AFPSCharacter::Shoot()
 						{
 							FHitResult HitResult;
 							FVector End = Start + EnemyDir * ShootDistance;
-							bool bHasHitSomething = CurrentWorld->LineTraceSingleByChannel(HitResult, Start, End, ECC_Visibility, QueryParams);
-							if (bHasHitSomething && HitResult.GetActor() != HitActor)
+							bool bHasHitSomething = CurrentWorld->LineTraceSingleByChannel(
+								HitResult, Start, End, ECC_Visibility, QueryParams);
+
+							DrawDebugLine(CurrentWorld, Start, End, FColor::Red, false, 0.2, 0, 1);
+
+							AActor* HitActorCheck = HitResult.GetActor();
+							if (bHasHitSomething && HitActorCheck != HitActor)
 							{
-								return;
+								continue;
 							}
 
 							IFPSInteractable* InterfaceInstance = Cast<IFPSInteractable>(HitActor);
 							if (InterfaceInstance)
 							{
 								InterfaceInstance->TriggerHit(this);
-								UGameplayStatics::ApplyDamage(HitActor, 1.0, GetController(), this, UDamageType::StaticClass());
+								UGameplayStatics::ApplyDamage(HitActor, ShootPotency, GetController(), this,
+								                              UDamageType::StaticClass());
 								return;
 							}
 
@@ -303,7 +329,12 @@ void AFPSCharacter::Shoot()
 							if (HitActor && HitActor->Implements<UFPSInteractable>())
 							{
 								IFPSInteractable::Execute_TriggerBlueprintHit(HitActor, this);
-								UGameplayStatics::ApplyDamage(HitActor, 1.0, GetController(), this, UDamageType::StaticClass());
+
+
+								FDamageEvent DamageEvent(UDamageType::StaticClass());
+
+								HitActor->TakeDamage(ShootPotency, DamageEvent, GetController(), this);
+								return;
 							}
 						}
 					}
@@ -327,7 +358,8 @@ void AFPSCharacter::Shoot()
 				UWorld* CurrentWorld = GetWorld();
 				if (CurrentWorld)
 				{
-					bool bHasHitSomething = CurrentWorld->LineTraceSingleByChannel(Hit, Start, End, ECC_GameTraceChannel2, QueryParams);
+					bool bHasHitSomething = CurrentWorld->LineTraceSingleByChannel(
+						Hit, Start, End, ECC_GameTraceChannel2, QueryParams);
 
 #if WITH_EDITOR
 					DrawDebugLine(CurrentWorld, Start, End, FColor::Green, false, 0.2f, 0, 1.0);
@@ -346,8 +378,10 @@ void AFPSCharacter::Shoot()
 							if (InterfaceInstance)
 							{
 								InterfaceInstance->TriggerHit(this);
-								UGameplayStatics::ApplyDamage(HitActor, 1.0, GetController(), this, UDamageType::StaticClass());
+								UGameplayStatics::ApplyDamage(HitActor, ShootPotency, GetController(), this,
+								                              UDamageType::StaticClass());
 							}
+
 
 							//Works only for BlueprintNative, BlueprintCallable or BlueprintImplementableEvent
 							//if (HitActor && HitActor->Implements<UFPSInteractable>())
@@ -368,19 +402,18 @@ void AFPSCharacter::Shoot()
 			if (HUDWidget)
 			{
 				HUDWidget->ShowReloadBar(ReloadDuration);
-			}	
+			}
 
-			GetWorld()->GetTimerManager().SetTimer(ReloadTimerHandle, FTimerDelegate::CreateLambda([this] ()
-				{			
-					CurrentAmmo = MaxAmmo;
-					if (HUDWidget)
-					{
-						HUDWidget->UpdateAmmo(CurrentAmmo, MaxAmmo);
-					}
-				}), ReloadDuration, false);
+			GetWorld()->GetTimerManager().SetTimer(ReloadTimerHandle, FTimerDelegate::CreateLambda([this]()
+			{
+				CurrentAmmo = MaxAmmo;
+				if (HUDWidget)
+				{
+					HUDWidget->UpdateAmmo(CurrentAmmo, MaxAmmo);
+				}
+			}), ReloadDuration, false);
 		}
 	}
-	
 }
 
 //void AFPSCharacter::ReloadAmmo()
@@ -393,9 +426,11 @@ void AFPSCharacter::Shoot()
 //}
 
 void AFPSCharacter::LaunchPebble(float Force)
-{	
+{
 }
-float AFPSCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+
+float AFPSCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
+                                AActor* DamageCauser)
 {
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
@@ -421,7 +456,11 @@ void AFPSCharacter::TakeDamage(int32 IncomingDamage)
 		if (RespawnComponent)
 		{
 			RespawnComponent->RespawnPlayer();
-			CurrentHealth = MaxHealth; // Reset HP 
+			CurrentHealth = MaxHealth; // Reset HP
+			CurrentAmmo = MaxAmmo; // Reset Bullets
+
+			HUDWidget->UpdateAmmo(CurrentAmmo, MaxAmmo);
+			HUDWidget->UpdateHealth(CurrentHealth);
 		}
 	}
 }
@@ -435,6 +474,7 @@ void AFPSCharacter::SaveGame()
 
 	DataManager->SaveGame(SaveSlotName, SaveUserID);
 }
+
 void AFPSCharacter::LoadGame()
 {
 	UDataManager* DataManager = GetGameInstance()->GetSubsystem<UDataManager>();

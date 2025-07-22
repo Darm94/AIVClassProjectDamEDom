@@ -28,7 +28,7 @@ public:
 	void PlayDamageFlash(float Duration);	
 	
 	UFUNCTION(BlueprintCallable, Category = "Minimap")
-	void UpdateMinimapIcons(const TArray<AActor*>& TrackedActors, UTexture2D* Icontexture);
+	void UpdateMinimapIcons(const TArray<AActor*>& TrackedActors, UTexture2D* PlayerIconTexture, UTexture2D* EnemyIconTexture);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Minimap")
 	class AFPSCharacter* MinimapActor;

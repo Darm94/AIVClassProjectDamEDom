@@ -60,9 +60,9 @@ void UFPSHUDWidget::PlayDamageFlash(float Duration)
 	}
 }
 
-void UFPSHUDWidget::UpdateMinimapIcons(const TArray<AActor*>& TrackedActors, UTexture2D* IconTexture)
+void UFPSHUDWidget::UpdateMinimapIcons(const TArray<AActor*>& TrackedActors, UTexture2D* PlayerIconTexture, UTexture2D* EnemyIconTexture)
 {
-	if (!MinimapActor || !MinimapCanvas || !IconTexture)
+	if (!MinimapActor || !MinimapCanvas || !PlayerIconTexture || !EnemyIconTexture)
 	{
 		return;
 	}
@@ -73,7 +73,7 @@ void UFPSHUDWidget::UpdateMinimapIcons(const TArray<AActor*>& TrackedActors, UTe
 	FVector2D PlayerIconPosition(MinimapSize.X/2, MinimapSize.Y/2); // top be set with the algorithm
 
 	UImage* PlayerIcon = WidgetTree->ConstructWidget<UImage>(UImage::StaticClass());
-	PlayerIcon->SetBrushFromTexture(IconTexture);
+	PlayerIcon->SetBrushFromTexture(PlayerIconTexture);
 
 	constexpr double PlayerIconSize = 16.0f;
 
@@ -120,11 +120,11 @@ void UFPSHUDWidget::UpdateMinimapIcons(const TArray<AActor*>& TrackedActors, UTe
 		FVector2D IconPosition(NormX * MinimapSize.X - IconSize/2, NormY * MinimapSize.Y - IconSize/2);
 		
 
-		if (IconPosition.X > 0 && IconPosition.X < MinimapSize.X && IconPosition.Y > 0 && IconPosition.Y < MinimapSize.Y)
-		{
+		//if (IconPosition.X > 0 && IconPosition.X < MinimapSize.X && IconPosition.Y > 0 && IconPosition.Y < MinimapSize.Y)
+		//{
 			// use the converted position to place the icon in the minimap
 			UImage* Icon = WidgetTree->ConstructWidget<UImage>(UImage::StaticClass());
-			Icon->SetBrushFromTexture(IconTexture);
+			Icon->SetBrushFromTexture(EnemyIconTexture);
 
 			UCanvasPanelSlot* IconSlot = MinimapCanvas->AddChildToCanvas(Icon);
 			if (IconSlot)
@@ -133,7 +133,7 @@ void UFPSHUDWidget::UpdateMinimapIcons(const TArray<AActor*>& TrackedActors, UTe
 				IconSlot->SetSize(FVector2D(IconSize, IconSize));
 				IconSlot->SetAutoSize(false);
 			}
-		}
+		//}
 	}
 }
 
