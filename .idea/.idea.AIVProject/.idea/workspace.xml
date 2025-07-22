@@ -14,10 +14,9 @@
   <component name="ChangeListManager">
     <list default="true" id="4bbdaf4e-a2c9-4817-b998-5526ed82493d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.AIVProject/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.AIVProject/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/AIVProject/Private/AI/BTTask_GetPointOnPath.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AIVProject/Private/AI/BTTask_GetPointOnPath.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/Blueprints/BP_Behavior_Enemy.uasset" beforeDir="false" afterPath="$PROJECT_DIR$/Content/Blueprints/BP_Behavior_Enemy.uasset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Content/TestMap.umap" beforeDir="false" afterPath="$PROJECT_DIR$/Content/TestMap.umap" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Source/AIVProject/Private/AI/BTTask_Patrol.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AIVProject/Private/AI/BTTask_Patrol.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/AIVProject/Private/Enemies/FPSBehaviorTreeEnemy.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AIVProject/Private/Enemies/FPSBehaviorTreeEnemy.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Source/AIVProject/Public/Enemies/FPSBehaviorTreeEnemy.h" beforeDir="false" afterPath="$PROJECT_DIR$/Source/AIVProject/Public/Enemies/FPSBehaviorTreeEnemy.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -167,7 +166,7 @@
     &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Ai__Fixes&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;Ai__Movement&quot;,
     &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
@@ -301,6 +300,8 @@
       <updated>1753083944376</updated>
       <workItem from="1753083945933" duration="7501000" />
       <workItem from="1753167593982" duration="2629000" />
+      <workItem from="1753227083378" duration="77000" />
+      <workItem from="1753227783893" duration="5000" />
     </task>
     <servers />
   </component>
@@ -329,7 +330,7 @@
         </breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Source/AIVProject/Private/Enemies/FPSBehaviorTreeEnemy.cpp</url>
-          <line>46</line>
+          <line>52</line>
           <option name="timeStamp" value="18" />
         </line-breakpoint>
       </breakpoints>

@@ -55,7 +55,15 @@ EBTNodeResult::Type UBTTask_Patrol::ExecuteTask(UBehaviorTreeComponent& OwnerCom
 		{
 			ThisEnemy->GetCharacterMovement()->MaxWalkSpeed = ThisEnemy->Walkspeed;
 			ThisEnemy->GetCharacterMovement()->MaxAcceleration = 99999.f;   
-			ThisEnemy->GetCharacterMovement()->BrakingDecelerationWalking = 99999.f;   
+			ThisEnemy->GetCharacterMovement()->BrakingDecelerationWalking = 99999.f;
+
+			auto Movement = ThisEnemy->GetCharacterMovement();
+			if (Movement)
+			{
+				Movement->GroundFriction = 0.f; // prova anche 0.1f se serve attrito minimo
+				//Movement->BrakingFrictionFactor = 0.f;
+				Movement->Velocity = ThisEnemy->GetActorForwardVector() * Movement->MaxWalkSpeed;
+			}
 		}
 		return EBTNodeResult::InProgress;
 	}
