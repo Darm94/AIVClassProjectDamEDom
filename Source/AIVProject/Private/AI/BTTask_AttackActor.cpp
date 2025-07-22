@@ -6,6 +6,7 @@
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 UBTTask_AttackActor::UBTTask_AttackActor()
 {
@@ -29,6 +30,9 @@ void UBTTask_AttackActor::TickTask(UBehaviorTreeComponent& OwnerComponent, uint8
     {
         BBC->SetValueAsBool(CanAttackKey.SelectedKeyName, false);
         BBC->SetValueAsBool(FName("bIsAttacking"), false);//TODO CHANGE to key.SelectedKeyName adn implement wait in separate task(now using firs is attacking in chase actor
+        AAIController* AIController = OwnerComponent.GetAIOwner();
+        AFPSBehaviorTreeEnemy* ThisEnemy = Cast<AFPSBehaviorTreeEnemy>(AIController->GetPawn());
+        ThisEnemy->GetCharacterMovement()->MaxWalkSpeed = ThisEnemy->Walkspeed;
         FinishLatentTask(OwnerComponent, EBTNodeResult::Failed);
     }
 
