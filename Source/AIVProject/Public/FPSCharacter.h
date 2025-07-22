@@ -68,7 +68,7 @@ public:
 	float ShootDistance = 2000.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float ShootPotency = 1.0f;
+	float ShootPotency = 10.0f;
 
 	void Interact();
 	void Shoot();
@@ -118,7 +118,10 @@ public:
 	UTextureRenderTarget2D* MinimapRenderTarget;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
-	UTexture2D* MinimapIconTexture;
+	UTexture2D* MinimapEnemyIconTexture;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "UI")
+	UTexture2D* MinimapPlayerIconTexture;
 
 private:
 	void SaveGame();

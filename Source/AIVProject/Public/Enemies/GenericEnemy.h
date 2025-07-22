@@ -63,4 +63,6 @@ public:
 	virtual bool TriggerInteraction(AActor* InInstigator) override { return false; };
 
 	virtual bool TriggerHit(AActor* InInstigator) override { return false; };
+
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
 };

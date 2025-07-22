@@ -2,6 +2,8 @@
 
 
 #include "Enemies/GenericEnemy.h"
+
+#include "FPSCharacter.h"
 #include "Perception/AISenseConfig_Sight.h"
 #include "Perception/AISenseConfig_Hearing.h"
 #include "Components/SkeletalMeshComponent.h"
@@ -63,15 +65,15 @@ void AGenericEnemy::PerceptionUpdated(const TArray<AActor*>& UpdatedActors)
 				{
 					if (Stimulus.Type == UAISense::GetSenseID<UAISense_Sight>() && Stimulus.WasSuccessfullySensed())
 					{
-						UE_LOG(LogTemp, Warning, TEXT("Saw actor %s at Location: %s"), *Actor->GetName(),
-						       *Stimulus.StimulusLocation.ToString());
+						//UE_LOG(LogTemp, Warning, TEXT("Saw actor %s at Location: %s"), *Actor->GetName(),
+						//       *Stimulus.StimulusLocation.ToString());
 						ReactToSeenActor(Actor, Stimulus.StimulusLocation);
 					}
 					else if (Stimulus.Type == UAISense::GetSenseID<UAISense_Hearing>() && Stimulus.
 						WasSuccessfullySensed())
 					{
-						UE_LOG(LogTemp, Warning, TEXT("Heard actor %s at Location: %s"), *Actor->GetName(),
-						       *Stimulus.StimulusLocation.ToString());
+						//UE_LOG(LogTemp, Warning, TEXT("Heard actor %s at Location: %s"), *Actor->GetName(),
+						//       *Stimulus.StimulusLocation.ToString());
 						ReactToHeardActor(Actor, Stimulus.StimulusLocation);
 					}
 				}
@@ -90,4 +92,20 @@ void AGenericEnemy::OnActorDelete(AActor* ActorDestroyed)
 void AGenericEnemy::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+}
+
+
+float AGenericEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator,
+                                AActor* DamageCauser)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Take damage"));
+	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+	Life -= DamageAmount;
+	if (Life <= 0)
+	{
+		Destroy();
+	}
+
+	return DamageAmount;
 }

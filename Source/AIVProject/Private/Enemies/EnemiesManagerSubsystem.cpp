@@ -8,7 +8,7 @@
 
 void UEnemiesManagerSubsystem::Initialize(FSubsystemCollectionBase& Collection)
 {
-	Super::Initialize(Collection);	
+	Super::Initialize(Collection);
 }
 
 void UEnemiesManagerSubsystem::Deinitialize()
@@ -37,7 +37,8 @@ void UEnemiesManagerSubsystem::SpawnEnemiesOnAlarm(AActor* ActorSoundingAlarm, A
 	}
 
 	UClass* BlueprintClass = LoadClass<ABaseEnemy>(nullptr, TEXT("/Game/Blueprints/BP_Sentinel.BP_Sentinel_C"));
-	FVector LocationToSpawn = ActorSoundingAlarm->GetActorLocation() - ActorSoundingAlarm->GetActorForwardVector() * 200;
+	FVector LocationToSpawn = ActorSoundingAlarm->GetActorLocation() - ActorSoundingAlarm->GetActorForwardVector() *
+		200;
 	FTransform SpawnTransform(LocationToSpawn);
 	ABaseEnemy* SentinelEnemy = Cast<ABaseEnemy>(SpawnEnemy(BlueprintClass, SpawnTransform));
 	SentinelEnemy->StateMachine->ChangeState(EState::Chase);
@@ -49,7 +50,6 @@ void UEnemiesManagerSubsystem::TriggerEnemiesHighAlert(AActor* ActorSoundingAlar
 	{
 		Enemy->HighAlert();
 	}
-
 }
 
 TArray<ABaseEnemy*> UEnemiesManagerSubsystem::SpawnBaseEnemies(int32 NumEnemies, FVector Location)
@@ -58,7 +58,8 @@ TArray<ABaseEnemy*> UEnemiesManagerSubsystem::SpawnBaseEnemies(int32 NumEnemies,
 
 	UClass* BlueprintClass = LoadClass<ABaseEnemy>(nullptr, TEXT("/Game/Blueprints/BP_BaseEnemy.BP_BaseEnemy_C"));
 	FActorSpawnParameters SpawnParams;
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+	SpawnParams.SpawnCollisionHandlingOverride =
+		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 	TArray<ABaseEnemy*> SpawnedEnemies;
 	for (int32 SpawnEnemiesIndex = 0; SpawnEnemiesIndex < NumEnemies; SpawnEnemiesIndex++)
 	{
@@ -78,16 +79,18 @@ TArray<ABaseEnemy*> UEnemiesManagerSubsystem::SpawnBaseEnemies(int32 NumEnemies,
 AGenericEnemy* UEnemiesManagerSubsystem::SpawnEnemy(UClass* ClassTospawn, FTransform InTransform)
 {
 	FActorSpawnParameters SpawnParams;
-	SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
+	SpawnParams.SpawnCollisionHandlingOverride =
+		ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding;
 	AGenericEnemy* NewEnemy = GetWorld()->SpawnActor<AGenericEnemy>(ClassTospawn, InTransform, SpawnParams);
 	return NewEnemy;
 }
 
 void UEnemiesManagerSubsystem::UnregisterActiveEnemy(AGenericEnemy* EnemyToRemove)
-{	
+{
 	if (EnemyToRemove && ActiveEnemies.Contains(EnemyToRemove))
 	{
 		ActiveEnemies.Remove(EnemyToRemove);
+		OnEnemyRemoved.Broadcast(EnemyToRemove);
 	}
 }
 
@@ -98,21 +101,20 @@ void UEnemiesManagerSubsystem::RegisterActiveEnemy(AGenericEnemy* EnemyToAdd)
 		return;
 	}
 	ActiveEnemies.Add(EnemyToAdd);
+	OnEnemyAdded.Broadcast(EnemyToAdd);
 }
 
 
-
-
 //DECLARE DELEGATE
-	/*OnSomeAction.Execute();
-	OnSomeAction.ExecuteIfBound();*/
+/*OnSomeAction.Execute();
+OnSomeAction.ExecuteIfBound();*/
 
-	//int32 myint = OnDelegateRetVal.Execute();
+//int32 myint = OnDelegateRetVal.Execute();
 
-	//int32 ret = OnDelegateRetParam.Execute(5);
+//int32 ret = OnDelegateRetParam.Execute(5);
 
-	//OnDynamicDelegate.Execute();
+//OnDynamicDelegate.Execute();
 
-	//OnMulticastEvent.Broadcast();
-	//OnFMyMultiOneParam.Broadcast(4);
-	//OnMulticastDynamic.Broadcast();
+//OnMulticastEvent.Broadcast();
+//OnFMyMultiOneParam.Broadcast(4);
+//OnMulticastDynamic.Broadcast();
