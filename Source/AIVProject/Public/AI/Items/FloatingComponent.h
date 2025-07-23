@@ -23,6 +23,18 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Floating")
+	float Amplitude = 50.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Floating")
+	float Frequency = 1.f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Floating")
+	float RotationSpeed = 30.f;
+
+private:
+	FVector InitialLocation;
+	float RunningTime = 0.f;
 
 		
 };

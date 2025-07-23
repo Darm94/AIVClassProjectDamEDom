@@ -4,7 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "AI/Items/FloatingComponent.h"
+
 #include "MyFloatingItem.generated.h"
+
 
 UCLASS()
 class AIVPROJECT_API AMyFloatingItem : public AActor
@@ -22,5 +25,9 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+	UPROPERTY(VisibleAnywhere)
+	UStaticMeshComponent* MeshComponent;
 
+	UPROPERTY(VisibleAnywhere)
+	UFloatingComponent* FloatingComponent;
 };

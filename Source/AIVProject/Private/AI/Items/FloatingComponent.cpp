@@ -18,7 +18,7 @@ UFloatingComponent::UFloatingComponent()
 void UFloatingComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
+	InitialLocation = GetOwner()->GetActorLocation();
 	// ...
 	
 }
@@ -29,6 +29,17 @@ void UFloatingComponent::TickComponent(float DeltaTime, ELevelTick TickType, FAc
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
+	if (!GetOwner()) return;
+
+	RunningTime += DeltaTime;
+
+	FVector NewLocation = InitialLocation;
+	NewLocation.Z += FMath::Sin(RunningTime * Frequency) * Amplitude;
+
+	GetOwner()->SetActorLocation(NewLocation);
 	// ...
+	FRotator CurrentRotation = GetOwner()->GetActorRotation();
+	CurrentRotation.Yaw += RotationSpeed * DeltaTime;
+	GetOwner()->SetActorRotation(CurrentRotation);
 }
 
