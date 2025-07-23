@@ -7,6 +7,7 @@
 #include "Perception/AISenseConfig_Sight.h"
 #include "Perception/AISenseConfig_Hearing.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Enemies/EnemiesManagerSubsystem.h"
 
 AGenericEnemy::AGenericEnemy()
@@ -102,10 +103,39 @@ float AGenericEnemy::TakeDamage(float DamageAmount, FDamageEvent const& DamageEv
 	Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
 
 	Life -= DamageAmount;
-	if (Life <= 0)
+	/*if (Life <= 0)
 	{
 		Destroy();
+	}*/
+
+	if (Life <= 0 && !bIsDying) // avoiding double call
+	{
+		bIsDying = true;
+
+		// Disable collisions
+		SetActorEnableCollision(false);
+
+		// block movement
+		if (auto* MoveComp = GetCharacterMovement())
+		{
+			MoveComp->DisableMovement();
+		}
+
+		// play death montage
+		if (DeathMontage && GetMesh())
+		{
+			GetMesh()->GetAnimInstance()->Montage_Play(DeathMontage);
+		}
+
+		// destroy after 5 seconds
+		FTimerHandle DestroyTimerHandle;
+		GetWorldTimerManager().SetTimer(DestroyTimerHandle, this, &AGenericEnemy::DelayedDestroy, 2.3f, false);
 	}
 
 	return DamageAmount;
+}
+
+void AGenericEnemy::DelayedDestroy()
+{
+	Destroy();
 }

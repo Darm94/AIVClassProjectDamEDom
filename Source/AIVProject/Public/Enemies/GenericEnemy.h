@@ -24,6 +24,14 @@ public:
 	UFUNCTION()
 	virtual void HighAlert() {};
 
+	UPROPERTY(EditAnywhere, Category = "Animation")
+	UAnimMontage* DeathMontage;
+
+	UFUNCTION()
+	void DelayedDestroy();
+
+	bool bIsDying = false;
+
 protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "AI")
