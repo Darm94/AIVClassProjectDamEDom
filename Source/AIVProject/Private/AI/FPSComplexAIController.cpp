@@ -40,7 +40,7 @@ AFPSComplexAIController::AFPSComplexAIController()
 	HearingConfig = CreateDefaultSubobject<UAISenseConfig_Hearing>(TEXT("AIPerceptionHearing"));
 	
 	//configure hearing
-	HearingConfig->HearingRange = 6000.0;
+	HearingConfig->HearingRange = 2000.0;
 	HearingConfig->SetMaxAge(5.0);
 	HearingConfig->DetectionByAffiliation = AffiliationFilter;
 	
