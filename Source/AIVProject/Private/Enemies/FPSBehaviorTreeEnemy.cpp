@@ -37,6 +37,7 @@ void AFPSBehaviorTreeEnemy::ReactToHeardActor(AActor* InActor, FVector Location)
 		if (Player && EnemyController)
 		{
 			EnemyController->BBC->SetValueAsVector(FName("TargetPatrolLocation"), Location);
+			EnemyController->MoveToLocation(Location);
 			GetCharacterMovement()->MaxWalkSpeed = MaxSpeed;
 		}
 	}

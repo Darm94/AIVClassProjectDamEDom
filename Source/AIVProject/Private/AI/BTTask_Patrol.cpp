@@ -49,8 +49,8 @@ EBTNodeResult::Type UBTTask_Patrol::ExecuteTask(UBehaviorTreeComponent& OwnerCom
 		{
 			ThisEnemy->FloatingPawnMovement->MaxSpeed = ThisEnemy->Walkpeed;
 		}
-		AIController->MoveToLocation(PatrolLocation);
 		*/
+		AIController->MoveToLocation(PatrolLocation);
 		if (ThisEnemy && ThisEnemy->GetCharacterMovement())
 		{
 			ThisEnemy->GetCharacterMovement()->MaxWalkSpeed = ThisEnemy->Walkspeed;
@@ -114,20 +114,21 @@ void UBTTask_Patrol::TickTask(UBehaviorTreeComponent& OwnerComponent, uint8* Nod
 		FinishLatentTask(OwnerComponent, EBTNodeResult::Succeeded);
 		return;
 	}
-	//Tick Movement
-	FVector Direction = (PatrolLocation - ControlledPawn->GetActorLocation()).GetSafeNormal();
-
-	//UE_LOG(LogTemp, Warning, TEXT("Direction: %s"), *Direction.ToString());
-
-	if (!Direction.IsNearlyZero())
-	{
-		ControlledPawn->AddMovementInput(Direction, 1.0f);
-		//UE_LOG(LogTemp, Warning, TEXT("AddMovementInput CALLED"));
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Direction is ZERO � NO INPUT"));
-	}
+	
+	// //Tick Movement
+	// FVector Direction = (PatrolLocation - ControlledPawn->GetActorLocation()).GetSafeNormal();
+	//
+	// //UE_LOG(LogTemp, Warning, TEXT("Direction: %s"), *Direction.ToString());
+	//
+	// if (!Direction.IsNearlyZero())
+	// {
+	// 	ControlledPawn->AddMovementInput(Direction, 1.0f);
+	// 	//UE_LOG(LogTemp, Warning, TEXT("AddMovementInput CALLED"));
+	// }
+	// else
+	// {
+	// 	UE_LOG(LogTemp, Warning, TEXT("Direction is ZERO � NO INPUT"));
+	// }
 
 	if (HasReachedTarget(ControlledPawn, PatrolLocation, 200))
 	{

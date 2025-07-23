@@ -307,9 +307,9 @@ void AFPSCharacter::Shoot()
 							FVector End = Start + EnemyDir * ShootDistance;
 							bool bHasHitSomething = CurrentWorld->LineTraceSingleByChannel(
 								HitResult, Start, End, ECC_Visibility, QueryParams);
-
+#if WITH_EDITOR
 							DrawDebugLine(CurrentWorld, Start, End, FColor::Red, false, 0.2, 0, 1);
-
+#endif
 							AActor* HitActorCheck = HitResult.GetActor();
 							if (bHasHitSomething && HitActorCheck != HitActor)
 							{
