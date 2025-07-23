@@ -14,6 +14,7 @@
 #include "RespawnComponent.h"
 #include "Enemies/EnemiesManagerSubsystem.h"
 #include "Engine/DamageEvents.h"
+#include "UI/FPSObjective.h"
 
 // Sets default values
 AFPSCharacter::AFPSCharacter()
@@ -60,6 +61,8 @@ void AFPSCharacter::BeginPlay()
 	PerceptionStimuliSource->RegisterWithPerceptionSystem();
 	LoadGame();
 
+	ObjectiveWidget = CreateWidget<UFPSObjective>(GetWorld(), ObjectiveUIClass);
+	ObjectiveWidget->AddToViewport();
 	if (HUDWidgetClass)
 	{
 		HUDWidget = CreateWidget<UFPSHUDWidget>(GetWorld(), HUDWidgetClass);
@@ -75,11 +78,18 @@ void AFPSCharacter::BeginPlay()
 			UEnemiesManagerSubsystem* EnemiesManager = GetWorld()->GetSubsystem<UEnemiesManagerSubsystem>();
 
 			MinimapTrackedActors.Append(EnemiesManager->GetActiveEnemies());
+
+			for (auto MinimapTrackedActor : MinimapTrackedActors)
+			{
+				ObjectiveWidget->AddEnemy();
+			}
+			
 			MinimapCaptureComponent->HiddenActors.Append(MinimapTrackedActors);
 			MinimapCaptureComponent->HiddenActors.Add(this);
 
 			EnemiesManager->OnEnemyAdded.AddLambda([this](AActor* EnemyActor)
 			{
+				ObjectiveWidget->AddEnemy();
 				if (!MinimapCaptureComponent->HiddenActors.Contains(EnemyActor))
 				{
 					MinimapCaptureComponent->HiddenActors.Add(EnemyActor);
@@ -89,6 +99,7 @@ void AFPSCharacter::BeginPlay()
 
 			EnemiesManager->OnEnemyRemoved.AddLambda([this](AActor* EnemyActor)
 			{
+				ObjectiveWidget->AddKill();
 				if (MinimapCaptureComponent->HiddenActors.Contains(EnemyActor))
 				{
 					MinimapCaptureComponent->HiddenActors.Remove(EnemyActor);
@@ -229,6 +240,11 @@ void AFPSCharacter::Interact()
 						{
 							InterfaceInstance->TriggerInteraction(this);
 							return;
+						}
+
+						if (HitActor->Implements<UFPSInteractable>())
+						{
+							IFPSInteractable::Execute_TriggerBlueprintInteract(HitActor, this);
 						}
 					}
 				}

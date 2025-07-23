@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "AI/Items/FloatingComponent.h"
+#include "Items/FloatingComponent.h"
 
 // Sets default values for this component's properties
 UFloatingComponent::UFloatingComponent()

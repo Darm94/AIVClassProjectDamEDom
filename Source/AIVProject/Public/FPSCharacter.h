@@ -53,7 +53,7 @@ public:
 #pragma region Actions
 
 	UPROPERTY(EditAnywhere,BlueprintReadWrite)
-	float InteractThreshold = 0.95f;
+	float InteractThreshold = 0.6f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float InteractRadius = 200.0f;
@@ -80,6 +80,16 @@ public:
 #pragma region UI
 	UPROPERTY(EditDefaultsOnly, Category = "UI")
 	TSubclassOf<class UUserWidget> HUDWidgetClass;
+
+	UPROPERTY(EditDefaultsOnly, Category = "UI")
+	TSubclassOf<class UUserWidget> ObjectiveUIClass;
+
+	UFUNCTION(BlueprintCallable)
+	UFPSObjective* GetObjectiveWidget()
+	{
+		return ObjectiveWidget;
+	}
+	
 #pragma endregion
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Stats")
@@ -131,6 +141,7 @@ private:
 	FGenericTeamId TeamID;
 
 	class UFPSHUDWidget* HUDWidget;
+	class UFPSObjective* ObjectiveWidget;
 	FTimerHandle ReloadTimerHandle;
 
 	TArray<AActor*> MinimapTrackedActors;

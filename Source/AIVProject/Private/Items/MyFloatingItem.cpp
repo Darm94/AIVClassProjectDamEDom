@@ -1,8 +1,8 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "AI/Items/MyFloatingItem.h"
-#include <AI/Items/FloatingComponent.h>
+#include "Items/MyFloatingItem.h"
+#include <Items/FloatingComponent.h>
 
 // Sets default values
 AMyFloatingItem::AMyFloatingItem()
